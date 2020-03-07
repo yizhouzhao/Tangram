@@ -694,6 +694,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 661313361}
   m_CullTransparentMesh: 0
+--- !u!1 &810681354 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1291115699765743541, guid: 43bc52adbb9f7de499a0ebc17dcf3f4c,
+    type: 3}
+  m_PrefabInstance: {fileID: 1291115699491933119}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &810681355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810681354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed50efb29c243654d8b0c5925333ea23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &905265653
 GameObject:
   m_ObjectHideFlags: 0
@@ -1089,7 +1107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.11764706}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
