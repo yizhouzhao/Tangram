@@ -15,9 +15,9 @@ public class ShapeMove : MonoBehaviour
     private bool canRotateR;
     private bool canRotateL;
 
-    //Flip by double click
-    private float lastClickTime = 0f;
-    private float catchTime = 0.2f;
+    //Flip by middle click
+    //private float lastClickTime = 0f;
+    //private float catchTime = 0.2f;
     private bool canFlip;
 
     // Start is called before the first frame update
@@ -39,8 +39,7 @@ public class ShapeMove : MonoBehaviour
             if (Input.GetMouseButtonUp(1))
             {
                 //Rotate
-                Debug.Log("Pressed right click. rotate" + gameObject.name);
-                float rotX = rotAngle * Mathf.Deg2Rad;
+                //Debug.Log("Pressed right click. rotate" + gameObject.name);
                 this.gameObject.transform.Rotate(Vector3.forward, rotAngle, Space.World);
                 canRotateR = false;
             }
@@ -52,7 +51,7 @@ public class ShapeMove : MonoBehaviour
             //Rotate
             if (Input.GetMouseButtonUp(0))
             {
-                Debug.Log("Pressed right click. rotate" + gameObject.name);
+                //Debug.Log("Pressed right click. rotate" + gameObject.name);
                 if (Vector3.Distance(currentPosition, this.transform.position) < 1e-2f)
                 {
                     float rotX = rotAngle * Mathf.Deg2Rad;
@@ -61,12 +60,21 @@ public class ShapeMove : MonoBehaviour
                 canRotateL = false;
             }
         }
+
+        if (canFlip)
+        {
+            if (Input.GetMouseButtonUp(2))
+            {
+                this.gameObject.transform.Rotate(Vector3.right, 180, Space.World);
+                canFlip = false;
+            }
+        }
     }
 
-    private void OnMouseDown()
-    {
+    //private void OnMouseDown()
+    //{
 
-    }
+    //}
 
     private Vector3 GetMouseWorldPos()
     {
@@ -98,19 +106,24 @@ public class ShapeMove : MonoBehaviour
             mOffset = gameObject.transform.position - GetMouseWorldPos();
             currentPosition = this.transform.position;
 
-            if (Time.time - lastClickTime < catchTime)
-            {
-                //double click
-                print("done:" + (Time.time - lastClickTime).ToString());
-                canFlip = true;
+            //if (Time.time - lastClickTime < catchTime)
+            //{
+            //    //double click
+            //    print("double click done:" + (Time.time - lastClickTime).ToString());
+            //    canFlip = true;
+            //}
+            //else
+            //{
+            //    //normal click
+            //    print("miss:" + (Time.time - lastClickTime).ToString());
+            //}
+            //lastClickTime = Time.time;
+        }
 
-            }
-            else
-            {
-                //normal click
-                print("miss:" + (Time.time - lastClickTime).ToString());
-            }
-            lastClickTime = Time.time;
+        //Middle button
+        if (Input.GetMouseButtonDown(2))
+        {
+            canFlip = true;
         }
     }
 
