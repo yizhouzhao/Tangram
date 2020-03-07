@@ -11,7 +11,7 @@ public class ShapeMove : MonoBehaviour
     private Vector3 currentPosition;
 
     //Rotate by right button
-    private float rotAngle = 15f;
+    private float rotAngle = 45f;
     private bool canRotateR;
     private bool canRotateL;
 
@@ -23,7 +23,7 @@ public class ShapeMove : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        this.transform.position = GetGridPosition(transform.position);
     }
 
     // Update is called once per frame
@@ -87,6 +87,11 @@ public class ShapeMove : MonoBehaviour
     private void OnMouseDrag()
     {
         transform.position = GetMouseWorldPos() + mOffset;
+
+        //Debug.Log("Shape move: " + transform.position);
+        //Debug.Log("Shape move after: " + GetGridPosition(transform.position));
+
+        this.transform.position = GetGridPosition(transform.position);
     }
 
     private void OnMouseOver()
@@ -127,4 +132,13 @@ public class ShapeMove : MonoBehaviour
         }
     }
 
+
+    private Vector3 GetGridPosition(Vector3 newPosition)
+    {
+        float x = Mathf.Floor(newPosition.x / ETangram.gridMoveStep + 0.5f) * ETangram.gridMoveStep;
+        float y = Mathf.Floor(newPosition.y / ETangram.gridMoveStep + 0.5f) * ETangram.gridMoveStep;
+
+        Vector3 snapPosition = new Vector3(x, y, newPosition.z);
+        return snapPosition;
+    }
 }
