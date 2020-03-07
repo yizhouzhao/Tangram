@@ -32,13 +32,13 @@ public class GenerateGrid : Editor
             UnityEditor.EditorApplication.delayCall += () => { GameObject.DestroyImmediate(childTransform.gameObject); };
         }
 
-        float boardLeft = ETangram.boardCenter.x - ETangram.boardWidth / 2;
-        float boardRight = ETangram.boardCenter.x + ETangram.boardWidth / 2;
+        float boardLeft = GTangram.boardCenter.x - GTangram.boardWidth / 2;
+        float boardRight = GTangram.boardCenter.x + GTangram.boardWidth / 2;
 
-        float boardTop = ETangram.boardCenter.y + ETangram.boardHeight / 2;
-        float boardBottom = ETangram.boardCenter.y - ETangram.boardHeight / 2;
+        float boardTop = GTangram.boardCenter.y + GTangram.boardHeight / 2;
+        float boardBottom = GTangram.boardCenter.y - GTangram.boardHeight / 2;
 
-        float step = ETangram.gridGenerateStep;
+        float step = GTangram.gridGenerateStep;
         float z = gameBoard.transform.position.z;
 
         Debug.Log("Editor");
