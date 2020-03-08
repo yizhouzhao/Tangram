@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class CurrentShapeInformation
@@ -34,8 +34,6 @@ public class AllInformation
 
 public class GameBoard : MonoBehaviour
 {
-    public Text debugText;
-
     [Header("Images and URLs")]
     public string imageURLTextURL = "https://raw.githubusercontent.com/yizhouzhao/Tangram/master/Tangram/Assets/Resources/ImageURL.txt";
     public int imageIndex;
@@ -76,7 +74,7 @@ public class GameBoard : MonoBehaviour
                 {
                     imageURLList.Add(urlLink);
                 }
-                Debug.Log(":\nReceived: " + webRequest.downloadHandler.text);
+                Debug.Log("Gameboard :\nReceived: " + webRequest.downloadHandler.text);
 
                 Debug.Log("Gameboard ruls length:" + urlLinks.Length.ToString());
                 if (urlLinks.Length > 0)
@@ -126,6 +124,17 @@ public class GameBoard : MonoBehaviour
 
         GetImageURLs();
         //imagePanelUI.SetImage("https://raw.githubusercontent.com/yizhouzhao/Tangram/master/Tangram/Assets/Resources/Problems/5.png");
+    }
+
+
+    public void LoadCurrentLevel()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    public void ExitLevel()
+    {
+        Application.Quit();
     }
 
     // Update is called once per frame

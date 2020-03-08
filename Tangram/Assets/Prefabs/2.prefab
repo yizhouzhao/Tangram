@@ -109,7 +109,7 @@ MonoBehaviour:
     shapeId: 2
     shapeType: 0
     rotationType: 0
-    shapePosition: {x: 0, y: 0, z: 0}
+    shapePosition: {x: 0, y: 0}
     shapePositionIds: {x: 0, y: 0}
     shapeRotation: {x: 0, y: 0, z: 0}
     shapeRotationId: 0
