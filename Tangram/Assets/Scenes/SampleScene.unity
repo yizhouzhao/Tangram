@@ -847,7 +847,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   problemImage: {fileID: 1979257717}
-  problemURL: E:\researches\Tangram\Tangram\Assets\Resources\Problems\7.png
+  problemImageURL: https://github.com/yizhouzhao/Tangram/blob/master/Tangram/Assets/Resources/Problems/5.png?raw=true
 --- !u!1 &176044626
 GameObject:
   m_ObjectHideFlags: 0
@@ -5828,6 +5828,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 310900b551c8dd94fb9fbd5c81e88242, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameBoard: {fileID: 280302791}
   formURL: https://docs.google.com/forms/u/0/d/e/1FAIpQLSccYxUJBq2FM6O4oHGhf_qf9Ugu2LaFizgwoJF6PoWf-UlV5A/formResponse
 --- !u!4 &1244808019
 Transform:

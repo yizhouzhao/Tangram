@@ -9,7 +9,7 @@ public class UIImagePanel : MonoBehaviour
 {
     public DirectoryInfo problemsDirectoryPath;
     public Image problemImage;
-    public string problemURL;
+    public string problemImageURL;
 
     //https://image.jimcdn.com/app/cms/image/transf/none/path/sb0abad0b84d20c80/image/iae9db43733254ec8/version/1407242965/tangram-letter-i.png
 
@@ -18,9 +18,9 @@ public class UIImagePanel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("UI image" + Application.persistentDataPath);
+        //Debug.Log("UI image" + Application.persistentDataPath);
 
-        StartCoroutine(setImage(problemURL));
+        StartCoroutine(setImage(problemImageURL));
     }
 
     // Update is called once per frame
@@ -31,7 +31,7 @@ public class UIImagePanel : MonoBehaviour
 
     public void LoadRandomImage()
     {
-        FileInfo[] fileInfo = problemsDirectoryPath.GetFiles("*.*", SearchOption.AllDirectories);
+        //FileInfo[] fileInfo = problemsDirectoryPath.GetFiles("*.*", SearchOption.AllDirectories);
     }
 
 
@@ -39,7 +39,7 @@ public class UIImagePanel : MonoBehaviour
     {
         //Texture2D texture = problemImage.mainTexture as Texture2D;
 
-        using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(problemURL))
+        using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(problemImageURL))
         {
             yield return uwr.SendWebRequest();
 
