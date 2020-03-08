@@ -106,7 +106,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shapeInfo:
-    shapeId: 0
+    shapeId: 4
     shapeType: 4
     rotationType: 2
     shapePosition: {x: 0, y: 0}

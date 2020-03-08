@@ -105,6 +105,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed50efb29c243654d8b0c5925333ea23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shapeId: 6
-  shapeType: 2
-  rotationType: 0
+  shapeInfo:
+    shapeId: 6
+    shapeType: 2
+    rotationType: 0
+    shapePosition: {x: 0, y: 0}
+    shapePositionIds: {x: 0, y: 0}
+    shapeRotation: {x: 0, y: 0, z: 0}
+    shapeRotationId: 0

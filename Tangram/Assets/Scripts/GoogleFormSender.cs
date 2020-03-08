@@ -8,15 +8,16 @@ public class GoogleFormSender : MonoBehaviour
 {
     public GameBoard gameBoard;
 
+
     [Header("Google form")]
     public string formURL = "https://docs.google.com/forms/d/e/1FAIpQLSccYxUJBq2FM6O4oHGhf_qf9Ugu2LaFizgwoJF6PoWf-UlV5A/formResponse";
-
-
 
     void Start()
     {
         //SendInfoToGoogleForm("https://www.google.com", "1", "3.1415926");
     }
+
+
 
     public void SendInfoToGoogleForm(string imgURL, string infoId, string solutionJson)
     {

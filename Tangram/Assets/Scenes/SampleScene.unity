@@ -847,7 +847,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   problemImage: {fileID: 1979257717}
-  problemImageURL: https://github.com/yizhouzhao/Tangram/blob/master/Tangram/Assets/Resources/Problems/5.png?raw=true
 --- !u!1 &176044626
 GameObject:
   m_ObjectHideFlags: 0
@@ -1837,6 +1836,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugText: {fileID: 761340698}
+  imageURLTextURL: https://raw.githubusercontent.com/yizhouzhao/Tangram/master/Tangram/Assets/Resources/ImageURL.txt
+  imageIndex: 0
+  imageURLList: []
+  imagePanelUI: {fileID: 149970036}
+  formSender: {fileID: 1244808018}
   SevenShapeMoveList:
   - {fileID: 456442675}
   - {fileID: 540957210}
@@ -1845,7 +1849,8 @@ MonoBehaviour:
   - {fileID: 1794026238}
   - {fileID: 1003838646}
   - {fileID: 311015050}
-  AllTimeShapeInfoList: []
+  allInformation:
+    AllTimeShapeInfoList: []
   curInfo:
     time: 0
     SevenShapeInfo: []
@@ -7388,7 +7393,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1475949485}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1475949485
 MonoBehaviour:
   m_ObjectHideFlags: 0
