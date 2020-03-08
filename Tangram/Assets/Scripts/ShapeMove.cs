@@ -18,14 +18,25 @@ public class ShapeInfo
     public Vector3 shapeRotation;
     public int shapeRotationId;
 
+    public ShapeInfo() {}
+
+    public ShapeInfo(ShapeInfo anotherInfo)
+    {
+        shapeId = anotherInfo.shapeId;
+        shapeType = anotherInfo.shapeType;
+        shapePosition = anotherInfo.shapePosition;
+        shapePositionIds = anotherInfo.shapePositionIds;
+        shapeRotation = anotherInfo.shapeRotation;
+        shapeRotationId = anotherInfo.shapeRotationId;
+    }
 
     public void RecordPosition(float x, float y)
     {
-        shapePosition[0] = x;
-        shapePosition[1] = y;
+        shapePosition[0] = x - GTangram.boardCenter.x;
+        shapePosition[1] = y - GTangram.boardCenter.y;
 
-        int idx = Mathf.FloorToInt(x / GTangram.gridMoveStep + 0.5f);
-        int idy = Mathf.FloorToInt(y / GTangram.gridMoveStep + 0.5f);
+        int idx = Mathf.FloorToInt(shapePosition[0] / GTangram.gridMoveStep + 0.5f);
+        int idy = Mathf.FloorToInt(shapePosition[1] / GTangram.gridMoveStep + 0.5f);
 
         shapePositionIds[0] = idx;
         shapePositionIds[1] = idy;
@@ -107,10 +118,10 @@ public class ShapeMove : MonoBehaviour
         //shapeInfo = new ShapeInfo();
 
         SetRandomPositionRotation();
-        this.transform.position = GetGridPosition(transform.position);
+        //this.transform.position = GetGridPosition(transform.position);
 
         string json = JsonUtility.ToJson(shapeInfo);
-        Debug.Log("Shape move: " + json);
+        //Debug.Log("Shape move: " + json);
         
     }
 
@@ -126,15 +137,21 @@ public class ShapeMove : MonoBehaviour
         float x = UnityEngine.Random.Range(boardLeft + GTangram.gridGenerateStep, boardRight - GTangram.gridGenerateStep);
         float y = UnityEngine.Random.Range(boardBottom + GTangram.gridGenerateStep, boardTop - GTangram.gridGenerateStep);
 
-        this.transform.position = new Vector3(x, y, 0f);
+        this.transform.position = GetGridPosition(new Vector3(x, y, 0f));
 
         //Set random rotation
-        this.transform.rotation = Quaternion.Euler(0f, 90f, 90f);
+        this.transform.rotation = Quaternion.Euler(0f, 90f, 90f); //init rotation to be on board
 
         int rotationTimes = UnityEngine.Random.Range(0, 8);
         for(int i = 0; i < rotationTimes; i++)
         {
+            RotateShape(true);
+        }
 
+        //Random Flip
+        if(UnityEngine.Random.Range(0f,1f) < 0.5f)
+        {
+            FlipShape();
         }
 
     }
@@ -145,7 +162,7 @@ public class ShapeMove : MonoBehaviour
         float clockWise = isClockWise ? 1.0f : -1.0f;
         this.gameObject.transform.Rotate(Vector3.back, rotAngle * clockWise, Space.World);
 
-        Debug.Log("Shape Move rotateshape: " + "");
+        //Debug.Log("Shape Move rotateshape: " + "");
 
         //shape information
         shapeInfo.SetRotationId(isClockWise);
@@ -177,7 +194,7 @@ public class ShapeMove : MonoBehaviour
             if (Input.GetMouseButtonUp(1))
             {
                 //Rotate
-                Debug.Log("Pressed right click. rotate" + gameObject.name);
+                //Debug.Log("Pressed right click. rotate" + gameObject.name);
                 RotateShape(false);
                 canRotateR = false;
             }
@@ -189,7 +206,7 @@ public class ShapeMove : MonoBehaviour
             //Rotate
             if (Input.GetMouseButtonUp(0))
             {
-                Debug.Log("Pressed left click. rotate" + gameObject.name);
+                //Debug.Log("Pressed left click. rotate" + gameObject.name);
                 if (Vector3.Distance(currentPosition, this.transform.position) < 1e-2f)
                 {
                     RotateShape(true);
