@@ -287,7 +287,7 @@ public class ShapeMove : MonoBehaviour
         }
     }
 
-
+    //snap to grid
     private Vector3 GetGridPosition(Vector3 newPosition)
     {
         float x = Mathf.Floor(newPosition.x / GTangram.gridMoveStep + 0.5f) * GTangram.gridMoveStep;
@@ -299,5 +299,16 @@ public class ShapeMove : MonoBehaviour
         shapeInfo.RecordPosition(snapPosition.x, snapPosition.y);
 
         return snapPosition;
+    }
+
+    //
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    Debug.Log("Shape move over lap " + this.gameObject.name + " " + collision.gameObject.name);
+    //}
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Shape move over lap" + this.gameObject.name + " " + other.gameObject.name);
     }
 }

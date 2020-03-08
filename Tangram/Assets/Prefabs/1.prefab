@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5095267401758819441}
   - component: {fileID: 7992556017944230479}
   - component: {fileID: 3273710087396405294}
+  - component: {fileID: 64923548199937660}
   m_Layer: 0
   m_Name: 1
   m_TagString: Untagged
@@ -113,3 +114,17 @@ MonoBehaviour:
     shapePositionIds: {x: 0, y: 0}
     shapeRotation: {x: 0, y: 0, z: 0}
     shapeRotationId: 0
+--- !u!64 &64923548199937660
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5095267401756629681}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 1
+  m_CookingOptions: 14
+  m_Mesh: {fileID: 4300000, guid: 76b997f2f519e2043a88936ce6f3229b, type: 3}
