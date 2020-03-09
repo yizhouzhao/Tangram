@@ -50,26 +50,26 @@ public class ShapeInfo
 
     public void SetRotationId(bool isClockWise)
     {
-        int clockWise = isClockWise ? 1 : -1;
         //Debug.Log("Shape Move ShapeInfo: " + "set rotation id");
         if (rotationType == ERotationType.Square)
         {
-            
-            shapeRotationId += clockWise % 6;
+            shapeRotationId = (shapeRotationId + 1) % 2;
         }
         else if(rotationType == ERotationType.Triangle)
         {
-            shapeRotationId += clockWise % 24;
+            int clockWise = isClockWise ? 1 : -1;
+            shapeRotationId = (shapeRotationId + clockWise) % 8;
         }
         else //rotationType == ERotationType.Parallelogram
         {
-            if (shapeRotationId < 12)
+            int clockWise = isClockWise ? 1 : -1;
+            if (shapeRotationId < 4)
             {
-                shapeRotationId = (shapeRotationId + clockWise) % 12;
+                shapeRotationId = (shapeRotationId + clockWise) % 4;
             }
             else
             {
-                shapeRotationId = 12 + (shapeRotationId + clockWise) % 12;
+                shapeRotationId = 4 + (shapeRotationId + clockWise) % 4;
             }
         }
     }
@@ -79,7 +79,6 @@ public class ShapeInfo
         if (rotationType == ERotationType.Square) {}
         else if (rotationType == ERotationType.Triangle)
         {
-            Debug.Log("Shape Move SetRotationIdWhenFlip" + " " + shapeRotationId);
             shapeRotationId = GTangram.triangleFlipDic[shapeRotationId];
 
         }
@@ -104,7 +103,7 @@ public class ShapeMove : MonoBehaviour
     private Vector3 currentPosition;
 
     //Rotate by right button
-    private float rotAngle = 15f;
+    private float rotAngle = 45f;
     private bool canRotateR;
     private bool canRotateL;
 
@@ -112,17 +111,6 @@ public class ShapeMove : MonoBehaviour
     //private float lastClickTime = 0f;
     //private float catchTime = 0.2f;
     private bool canFlip;
-
-    //Control Keycode
-    public KeyCode rotationClockWiseCode = KeyCode.LeftArrow;
-    public KeyCode rotationCounterClockWiseCode = KeyCode.RightArrow;
-    public KeyCode flipCode = KeyCode.UpArrow;
-    public KeyCode flipCode2 = KeyCode.DownArrow;
-
-    //selected
-    public static ShapeMove selectedShapeMove;
-
-
 
     // Start is called before the first frame update
     void Start()
@@ -202,68 +190,46 @@ public class ShapeMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         ////Right mouse button
         //if (Input.GetMouseButtonUp(1))
         //{
         //    canRotateR = false;
         //}
-        
-        if(ReferenceEquals(ShapeMove.selectedShapeMove, this))
+        if (canRotateR)
         {
-            if (Input.GetKeyUp(rotationClockWiseCode))
+            if (Input.GetMouseButtonUp(1))
             {
+                //Rotate
+                //Debug.Log("Pressed right click. rotate" + gameObject.name);
                 RotateShape(false);
+                canRotateR = false;
             }
-
-            if (Input.GetKeyUp(rotationCounterClockWiseCode))
-            {
-                RotateShape(true);
-            }
-
-
-            if (Input.GetKeyUp(flipCode) || Input.GetKeyUp(flipCode2))
-            {
-                FlipShape();
-            }
-
         }
 
-        //if (canRotateR)
-        //{
-        //    if (Input.GetMouseButtonUp(1) || Input.GetKeyUp(rotationClockWiseCode))
-        //    {
-        //        //Rotate
-        //        //Debug.Log("Pressed right click. rotate" + gameObject.name);
-        //        RotateShape(false);
-        //        canRotateR = false;
-        //    }
-        //}
-
         
-        //if (canRotateL)
-        //{
-        //    //Rotate
-        //    if (Input.GetMouseButtonUp(0))
-        //    {
-        //        //Debug.Log("Pressed left click. rotate" + gameObject.name);
-        //        if (Vector3.Distance(currentPosition, this.transform.position) < 1e-2f)
-        //        {
-        //            RotateShape(true);
-        //        }
-        //        canRotateL = false;
-        //    }
-        //}
+        if (canRotateL)
+        {
+            //Rotate
+            if (Input.GetMouseButtonUp(0))
+            {
+                //Debug.Log("Pressed left click. rotate" + gameObject.name);
+                if (Vector3.Distance(currentPosition, this.transform.position) < 1e-2f)
+                {
+                    RotateShape(true);
+                }
+                canRotateL = false;
+            }
+        }
 
-        //if (canFlip)
-        //{
-        //    if (Input.GetMouseButtonUp(2))
-        //    {
-        //        //this.gameObject.transform.Rotate(Vector3.right, 180, Space.World);
-        //        FlipShape();
-        //        canFlip = false;
-        //    }
-        //}
+        if (canFlip)
+        {
+            if (Input.GetMouseButtonUp(2))
+            {
+                //this.gameObject.transform.Rotate(Vector3.right, 180, Space.World);
+                FlipShape();
+                canFlip = false;
+            }
+        }
     }
 
     private Vector3 GetMouseWorldPos()
@@ -287,7 +253,7 @@ public class ShapeMove : MonoBehaviour
     private void OnMouseOver()
     {
         //Right mouse button
-        if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(rotationClockWiseCode))
+        if (Input.GetMouseButtonDown(1))
         {
             canRotateR = true;
         }
@@ -295,7 +261,6 @@ public class ShapeMove : MonoBehaviour
         //Left mouse button
         if (Input.GetMouseButtonDown(0))
         {
-            ShapeMove.selectedShapeMove = this;
             canRotateL = true;
             //Debug.Log("ShapeMove");
             mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
@@ -346,7 +311,7 @@ public class ShapeMove : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         
-        //Debug.Log("Shape move over lap" + this.gameObject.name + " " + other.gameObject.name);
+        Debug.Log("Shape move over lap" + this.gameObject.name + " " + other.gameObject.name);
         if (other.gameObject.tag == "Tangram")
         {
             overLapList.Add(other.gameObject.GetComponent<ShapeMove>());
