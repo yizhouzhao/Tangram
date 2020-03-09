@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -66,6 +67,8 @@ public class GameBoard : MonoBehaviour
             if (webRequest.isNetworkError)
             {
                 Debug.Log( "Error: " + webRequest.error);
+
+                yield return null;
             }
             else
             {
@@ -74,20 +77,50 @@ public class GameBoard : MonoBehaviour
                 {
                     imageURLList.Add(urlLink);
                 }
-                Debug.Log("Gameboard :\nReceived: " + webRequest.downloadHandler.text);
+                //Debug.Log("Gameboard :\nReceived: " + webRequest.downloadHandler.text);
 
-                Debug.Log("Gameboard ruls length:" + urlLinks.Length.ToString());
+                //Debug.Log("Gameboard ruls length:" + urlLinks.Length.ToString());
+
+                yield return null;
+
                 if (urlLinks.Length > 0)
                 {
-                    int randomImgIndex = UnityEngine.Random.Range(0, urlLinks.Length);
-                    imageIndex = randomImgIndex;
-                    imageURL = urlLinks[imageIndex];
-                    imagePanelUI.LoadImageFromURL(imageURL);
+                    while (imagePanelUI.loadImageSuccessful == false)
+                    {
+                        int randomImgIndex = UnityEngine.Random.Range(0, urlLinks.Length);
+                        imageIndex = randomImgIndex;
+                        Debug.Log("Gameboard image index: " + imageIndex);
+
+                        imageURL = urlLinks[imageIndex];
+                        Debug.Log("Gameboard image link: " + imageURL);
+
+                        imagePanelUI.LoadImageFromURL(imageURL);
+
+                        yield return new WaitForSeconds(0.5f);
+                    }
+
+
+                    //for (int j = 0; j < urlLinks.Length; ++j)
+                    //{
+
+                    //    imageURL = urlLinks[j];
+                    //    Debug.Log("Gameboard image link: " + j + " " + imageURL);
+
+                    //    imagePanelUI.LoadImageFromURL(imageURL);
+
+                    //    yield return null;
+                    //}
                 }
             }
         }
 
         yield return null;
+    }
+
+    IEnumerator LoadRandomImage()
+    {
+        yield return null;
+
     }
 
 
@@ -119,13 +152,30 @@ public class GameBoard : MonoBehaviour
     void Start()
     {
         allInformation = new AllInformation();
-
         imageURLList = new List<string>();
 
+        //Get Image
         GetImageURLs();
         //imagePanelUI.SetImage("https://raw.githubusercontent.com/yizhouzhao/Tangram/master/Tangram/Assets/Resources/Problems/5.png");
+
+        //Place tangrams
+        StartCoroutine(PlaceShapes());
     }
 
+    IEnumerator PlaceShapes()
+    {
+        foreach(ShapeMove shape in SevenShapeMoveList)
+        {         
+            do
+            {
+                shape.SetRandomPositionRotation();
+                yield return new WaitForFixedUpdate();
+            } while (shape.overLapList.Count > 0);
+
+            
+        }
+        yield return null;
+    }
 
     public void LoadCurrentLevel()
     {

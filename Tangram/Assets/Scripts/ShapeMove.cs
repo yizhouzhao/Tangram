@@ -95,7 +95,7 @@ public class ShapeMove : MonoBehaviour
 {
     [Header("Shape info")]
     public ShapeInfo shapeInfo;
-
+    public List<ShapeMove> overLapList = new List<ShapeMove>();
 
     //Move by left button
     private Vector3 mOffset;
@@ -117,10 +117,10 @@ public class ShapeMove : MonoBehaviour
     {
         //shapeInfo = new ShapeInfo();
 
-        SetRandomPositionRotation();
+        //SetRandomPositionRotation();
         //this.transform.position = GetGridPosition(transform.position);
 
-        string json = JsonUtility.ToJson(shapeInfo);
+        //string json = JsonUtility.ToJson(shapeInfo);
         //Debug.Log("Shape move: " + json);
         
     }
@@ -154,6 +154,12 @@ public class ShapeMove : MonoBehaviour
             FlipShape();
         }
 
+        //Debug.Log("ShapeMove SetRandomPositionRotation " + this.gameObject.name + " " + isOverlap.ToString());
+        ////avoid overlapping
+        //if (this.isOverlap)
+        //{
+        //    SetRandomPositionRotation();
+        //}
     }
 
     //Rotate shape clockwisely or counterclockwisely
@@ -225,11 +231,6 @@ public class ShapeMove : MonoBehaviour
             }
         }
     }
-
-    //private void OnMouseDown()
-    //{
-
-    //}
 
     private Vector3 GetMouseWorldPos()
     {
@@ -309,6 +310,21 @@ public class ShapeMove : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        
         Debug.Log("Shape move over lap" + this.gameObject.name + " " + other.gameObject.name);
+        if (other.gameObject.tag == "Tangram")
+        {
+            overLapList.Add(other.gameObject.GetComponent<ShapeMove>());
+            //other.gameObject.GetComponent<ShapeMove>().isOverlap = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "Tangram")
+        {
+            overLapList.Remove(other.gameObject.GetComponent<ShapeMove>());
+            //other.gameObject.GetComponent<ShapeMove>().isOverlap = false;
+        }
     }
 }

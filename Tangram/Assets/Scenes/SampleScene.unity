@@ -846,6 +846,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fc749b3b4987054e9e63bf110738d57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  loadImageSuccessful: 0
   problemImage: {fileID: 1979257717}
 --- !u!1001 &186617657
 PrefabInstance:
@@ -10077,7 +10078,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 5adb77a4fb098a44fbbaea2d90f21147, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0c41c297850dd5d4a94f447e2ba62962, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

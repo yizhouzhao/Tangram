@@ -7,6 +7,7 @@ using UnityEngine.Networking;
 
 public class UIImagePanel : MonoBehaviour
 {
+    public bool loadImageSuccessful = false;
     public DirectoryInfo problemsDirectoryPath;
     public Image problemImage;
     private string problemImageURL = "https://github.com/yizhouzhao/Tangram/blob/master/Tangram/Assets/Resources/Problems/6.png?raw=true";
@@ -27,11 +28,6 @@ public class UIImagePanel : MonoBehaviour
     }
 
 
-    public void LoadRandomImage()
-    {
-        //FileInfo[] fileInfo = problemsDirectoryPath.GetFiles("*.*", SearchOption.AllDirectories);
-    }
-
 
     IEnumerator setImage(string url)
     {
@@ -51,6 +47,8 @@ public class UIImagePanel : MonoBehaviour
                 var texture = DownloadHandlerTexture.GetContent(uwr);
 
                 problemImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0, 0));
+
+                loadImageSuccessful = true;
             }
         }
     }
