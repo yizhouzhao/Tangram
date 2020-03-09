@@ -322,15 +322,21 @@ public class ShapeMove : MonoBehaviour
 
     private void OnMouseOver()
     {
-        //Right mouse button
-        if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(rotationClockWiseCode))
-        {
-            canRotateR = true;
-        }
+        ////Right mouse button
+        //if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(rotationClockWiseCode))
+        //{
+        //    canRotateR = true;
+        //}
 
         //Left mouse button
         if (Input.GetMouseButtonDown(0))
         {
+            //Record movement sequence
+            if(!ReferenceEquals(ShapeMove.selectedShapeMove, this))
+            {
+                GameBoard.curInfo.AddMoveShapeToSequence(this.shapeInfo.shapeId);
+            }
+
             ShapeMove.selectedShapeMove = this;
             canRotateL = true;
             //Debug.Log("ShapeMove");
@@ -352,11 +358,11 @@ public class ShapeMove : MonoBehaviour
             //lastClickTime = Time.time;
         }
 
-        //Middle button
-        if (Input.GetMouseButtonDown(2))
-        {
-            canFlip = true;
-        }
+        ////Middle button
+        //if (Input.GetMouseButtonDown(2))
+        //{
+        //    canFlip = true;
+        //}
     }
 
     //snap to grid

@@ -8,29 +8,35 @@ using UnityEngine.SceneManagement;
 [System.Serializable]
 public class CurrentShapeInformation
 {
-    public float time;
+    public List<int> MoveShapeSequence;
     public List<ShapeInfo> SevenShapeInfo;
 
-    public CurrentShapeInformation(float ctime)
+    public CurrentShapeInformation()
     {
-        time = ctime;
         SevenShapeInfo = new List<ShapeInfo>();
+        MoveShapeSequence = new List<int>();
     }
-}
 
-
-[System.Serializable]
-public class AllInformation
-{
-    public List<CurrentShapeInformation> AllTimeShapeInfoList;
-
-    public AllInformation() { AllTimeShapeInfoList = new List<CurrentShapeInformation>(); }
-
-    public void AddCurrrentShapeInfo(CurrentShapeInformation currShapeInfo)
+    //Add the move sequence and labeling
+    public void AddMoveShapeToSequence(int idx)
     {
-        AllTimeShapeInfoList.Add(currShapeInfo);
+        MoveShapeSequence.Add(idx);
     }
 }
+
+
+//[System.Serializable]
+//public class AllInformation
+//{
+//    public List<CurrentShapeInformation> AllTimeShapeInfoList;
+
+//    public AllInformation() { AllTimeShapeInfoList = new List<CurrentShapeInformation>(); }
+
+//    public void AddCurrrentShapeInfo(CurrentShapeInformation currShapeInfo)
+//    {
+//        AllTimeShapeInfoList.Add(currShapeInfo);
+//    }
+//}
 
 
 public class GameBoard : MonoBehaviour
@@ -48,9 +54,9 @@ public class GameBoard : MonoBehaviour
     //Information
     public List<ShapeMove> SevenShapeMoveList;
 
-    public AllInformation allInformation;
+    //public AllInformation allInformation;
 
-    public CurrentShapeInformation curInfo;
+    public static CurrentShapeInformation curInfo = new CurrentShapeInformation();
 
     //Get images url from text url
     public void GetImageURLs()
@@ -126,14 +132,16 @@ public class GameBoard : MonoBehaviour
 
     public void SaveCurrentShapeInfo()
     {
-        curInfo = new CurrentShapeInformation(Time.time);
-
         foreach (ShapeMove shapeMove in SevenShapeMoveList)
         {
-            curInfo.SevenShapeInfo.Add(new ShapeInfo(shapeMove.shapeInfo));
+            GameBoard.curInfo.SevenShapeInfo.Add(new ShapeInfo(shapeMove.shapeInfo));
         }
 
-        allInformation.AddCurrrentShapeInfo(curInfo);
+        string jsonInfo = JsonUtility.ToJson(GameBoard.curInfo);
+        //Debug.Log("game board exit json: " + jsonInfo);
+
+        formSender.SendInfoToGoogleForm(imageURL, imageIndex.ToString(), jsonInfo);
+        //allInformation.AddCurrrentShapeInfo(curInfo);
     }
 
     public void SaveAllShapeInfo()
@@ -142,16 +150,16 @@ public class GameBoard : MonoBehaviour
         //Debug.Log("GameBoard " + path);
         //debugText.text = path;
 
-        string jsonInfo = JsonUtility.ToJson(allInformation);
+        //string jsonInfo = JsonUtility.ToJson(allInformation);
         //Debug.Log("game board exit json: " + json);
 
-        formSender.SendInfoToGoogleForm(imageURL, imageIndex.ToString(), jsonInfo);
+        //formSender.SendInfoToGoogleForm(imageURL, imageIndex.ToString(), jsonInfo);
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        allInformation = new AllInformation();
+        //allInformation = new AllInformation();
         imageURLList = new List<string>();
 
         //Get Image
@@ -160,6 +168,7 @@ public class GameBoard : MonoBehaviour
 
         //Place tangrams
         StartCoroutine(PlaceShapes());
+
     }
 
     IEnumerator PlaceShapes()
