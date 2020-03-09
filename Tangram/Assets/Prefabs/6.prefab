@@ -113,9 +113,13 @@ MonoBehaviour:
     rotationType: 0
     shapePosition: {x: 0, y: 0}
     shapePositionIds: {x: 0, y: 0}
-    isOverlap: 0
     shapeRotation: {x: 0, y: 0, z: 0}
     shapeRotationId: 0
+  overLapList: []
+  rotationClockWiseCode: 276
+  rotationCounterClockWiseCode: 275
+  flipCode: 273
+  flipCode2: 274
 --- !u!64 &64425891177692904
 MeshCollider:
   m_ObjectHideFlags: 0

@@ -30,6 +30,13 @@ public class ShapeInfo
         shapeRotationId = anotherInfo.shapeRotationId;
     }
 
+    //Mod function
+    public static int mod(int x, int m)
+    {
+        int r = x % m;
+        return r < 0 ? r + m : r;
+    }
+
     public void RecordPosition(float x, float y)
     {
         shapePosition[0] = x - GTangram.boardCenter.x;
@@ -48,44 +55,64 @@ public class ShapeInfo
         shapeRotation = eularAngle;
     }
 
-    public void SetRotationId(bool isClockWise)
+    public void SetRotationId(bool isClockWise, int times = 1)
     {
         int clockWise = isClockWise ? 1 : -1;
         //Debug.Log("Shape Move ShapeInfo: " + "set rotation id");
         if (rotationType == ERotationType.Square)
         {
-            
-            shapeRotationId += clockWise % 6;
+
+            //shapeRotationId = (shapeRotationId + clockWise) % 6;
+            shapeRotationId = ShapeInfo.mod(shapeRotationId + clockWise * times, 6);
         }
         else if(rotationType == ERotationType.Triangle)
         {
-            shapeRotationId += clockWise % 24;
+            //shapeRotationId = (shapeRotationId + clockWise) % 24;
+            shapeRotationId = ShapeInfo.mod(shapeRotationId + clockWise * times, 24);
         }
         else //rotationType == ERotationType.Parallelogram
         {
-            if (shapeRotationId < 12)
+            if (shapeRotationId >= 0)
             {
-                shapeRotationId = (shapeRotationId + clockWise) % 12;
+                //shapeRotationId = (shapeRotationId + clockWise) % 12;
+                shapeRotationId = ShapeInfo.mod(shapeRotationId + clockWise * times, 12);
             }
-            else
+            else //shapeRotationId < 0
             {
-                shapeRotationId = 12 + (shapeRotationId + clockWise) % 12;
+                //shapeRotationId = (shapeRotationId + clockWise) % 12 - 12;
+                shapeRotationId = ShapeInfo.mod(shapeRotationId + clockWise * times, 12) - 12;
             }
         }
     }
 
     public void SetRotationIdWhenFlip()
     {
-        if (rotationType == ERotationType.Square) {}
+        if (rotationType == ERotationType.Square) 
+        {
+            //shapeRotationId = (-shapeRotationId) % 6;
+            shapeRotationId = ShapeInfo.mod(-shapeRotationId, 6);
+        }
         else if (rotationType == ERotationType.Triangle)
         {
-            Debug.Log("Shape Move SetRotationIdWhenFlip" + " " + shapeRotationId);
-            shapeRotationId = GTangram.triangleFlipDic[shapeRotationId];
+            //Debug.Log("Shape Move SetRotationIdWhenFlip" + " " + shapeRotationId);
+            //shapeRotationId = GTangram.triangleFlipDic[shapeRotationId];
+            //shapeRotationId = (-shapeRotationId) % 24;
+            shapeRotationId = ShapeInfo.mod(-shapeRotationId, 24);
 
         }
         else //rotationType == ERotationType.Parallelogram
         {
-            shapeRotationId = GTangram.parallogramFlipDic[shapeRotationId];
+            //shapeRotationId = GTangram.parallogramFlipDic[shapeRotationId];
+            if (shapeRotationId >= 0)
+            {
+                //shapeRotationId = (-shapeRotationId) % 12 - 12;
+                shapeRotationId = ShapeInfo.mod(-shapeRotationId, 12) - 12;
+            }
+            else //shapeRotationId < 0
+            {
+                //shapeRotationId = (-shapeRotationId) % 12;
+                shapeRotationId = ShapeInfo.mod(-shapeRotationId, 12);
+            }
         }
     }
 
@@ -127,14 +154,17 @@ public class ShapeMove : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //shapeInfo = new ShapeInfo();
+        //Set init shapeinfo
+       // shapeInfo = new ShapeInfo();
+
+        //shapeInfo.shapeRotationId = 3; // For rotation group analysis see https://docs.google.com/presentation/d/109r5e57-rYyy24ohulOeN1EyXAWMG9CRjzNiGJXONoc/edit#slide=id.g813abeac4c_0_28
 
         //SetRandomPositionRotation();
         //this.transform.position = GetGridPosition(transform.position);
 
         //string json = JsonUtility.ToJson(shapeInfo);
         //Debug.Log("Shape move: " + json);
-        
+
     }
 
     public void SetRandomPositionRotation()
@@ -152,16 +182,19 @@ public class ShapeMove : MonoBehaviour
         this.transform.position = GetGridPosition(new Vector3(x, y, 0f));
 
         //Set random rotation
-        this.transform.rotation = Quaternion.Euler(0f, 90f, 90f); //init rotation to be on board
+        this.transform.rotation = Quaternion.Euler(-45f, 90f, 90f); //init rotation to be on board
+        this.shapeInfo.shapeRotationId = 0;
 
-        int rotationTimes = UnityEngine.Random.Range(0, 8);
-        for(int i = 0; i < rotationTimes; i++)
-        {
-            RotateShape(true);
-        }
+        int rotationTimes = UnityEngine.Random.Range(0, 24);
+        //for (int i = 0; i < rotationTimes; i++)
+        //{
+        //    RotateShape(true);
+        //}
+
+        RotateShape(true, rotationTimes);
 
         //Random Flip
-        if(UnityEngine.Random.Range(0f,1f) < 0.5f)
+        if (UnityEngine.Random.Range(0f, 1f) < 0.5f)
         {
             FlipShape();
         }
@@ -175,15 +208,18 @@ public class ShapeMove : MonoBehaviour
     }
 
     //Rotate shape clockwisely or counterclockwisely
-    void RotateShape(bool isClockWise)
+    void RotateShape(bool isClockWise, int times = 1)
     {
         float clockWise = isClockWise ? 1.0f : -1.0f;
-        this.gameObject.transform.Rotate(Vector3.back, rotAngle * clockWise, Space.World);
+        this.gameObject.transform.Rotate(Vector3.back, rotAngle * clockWise * times, Space.World);
 
         //Debug.Log("Shape Move rotateshape: " + "");
 
         //shape information
-        shapeInfo.SetRotationId(isClockWise);
+        for(int i = 0; i < times; ++i)
+        {
+            shapeInfo.SetRotationId(isClockWise);
+        }
         shapeInfo.RecordRotation(this.transform.rotation.eulerAngles);
     }
 
