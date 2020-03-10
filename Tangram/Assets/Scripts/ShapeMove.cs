@@ -148,14 +148,15 @@ public class ShapeMove : MonoBehaviour
 
     //selected
     public static ShapeMove selectedShapeMove;
-
-
+    public GameObject highlightSphere;
 
     // Start is called before the first frame update
     void Start()
     {
+        highlightSphere = this.transform.Find("HighlightSphere").gameObject;
+        highlightSphere.SetActive(false);
         //Set init shapeinfo
-       // shapeInfo = new ShapeInfo();
+        // shapeInfo = new ShapeInfo();
 
         //shapeInfo.shapeRotationId = 3; // For rotation group analysis see https://docs.google.com/presentation/d/109r5e57-rYyy24ohulOeN1EyXAWMG9CRjzNiGJXONoc/edit#slide=id.g813abeac4c_0_28
 
@@ -320,6 +321,10 @@ public class ShapeMove : MonoBehaviour
         this.transform.position = GetGridPosition(transform.position);
     }
 
+    public void ToggleHighLight()
+    {
+        highlightSphere.SetActive(highlightSphere.activeSelf ? false : true);
+    }
     private void OnMouseOver()
     {
         ////Right mouse button
@@ -335,6 +340,11 @@ public class ShapeMove : MonoBehaviour
             if(!ReferenceEquals(ShapeMove.selectedShapeMove, this))
             {
                 GameBoard.curInfo.AddMoveShapeToSequence(this.shapeInfo.shapeId);
+                if (ShapeMove.selectedShapeMove)
+                {
+                    ShapeMove.selectedShapeMove.ToggleHighLight();
+                }
+                this.ToggleHighLight();
             }
 
             ShapeMove.selectedShapeMove = this;
