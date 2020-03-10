@@ -93,8 +93,8 @@ public class GameBoard : MonoBehaviour
                 {
                     while (imagePanelUI.loadImageSuccessful == false)
                     {
-                        int randomImgIndex = UnityEngine.Random.Range(0, urlLinks.Length);
-                        imageIndex = randomImgIndex;
+                        int randomImgIndex = UnityEngine.Random.Range(0, urlLinks.Length * urlLinks.Length);
+                        imageIndex = (int)Mathf.Sqrt(randomImgIndex);
                         Debug.Log("Gameboard image index: " + imageIndex);
 
                         imageURL = urlLinks[imageIndex];
@@ -139,8 +139,20 @@ public class GameBoard : MonoBehaviour
 
         string jsonInfo = JsonUtility.ToJson(GameBoard.curInfo);
         //Debug.Log("game board exit json: " + jsonInfo);
+        if (GameBoard.curInfo.MoveShapeSequence.Count > 0)
+        {
+            formSender.SendInfoToGoogleForm(imageURL, imageIndex.ToString(), jsonInfo);
+        }
+    //allInformation.AddCurrrentShapeInfo(curInfo);
+}
+
+    public void ReportWrongImage()
+    {
+        string jsonInfo = "wrong image";
+        //Debug.Log("game board exit json: " + jsonInfo);
 
         formSender.SendInfoToGoogleForm(imageURL, imageIndex.ToString(), jsonInfo);
+
         //allInformation.AddCurrrentShapeInfo(curInfo);
     }
 

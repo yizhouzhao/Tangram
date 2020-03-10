@@ -7,7 +7,7 @@ public class GTangram
     public static float boardHeight = 10f;
     public static float boardWidth = 10f;
 
-    public static Vector2 boardCenter = new Vector2(-2f, 0f);
+    public static Vector2 boardCenter = new Vector2(-0.5f, 0f);
     public static float gridGenerateStep = 1f;
     public static float gridMoveStep = 0.1f;
 

@@ -141,10 +141,10 @@ public class ShapeMove : MonoBehaviour
     private bool canFlip;
 
     //Control Keycode
-    public KeyCode rotationClockWiseCode = KeyCode.RightArrow;
-    public KeyCode rotationCounterClockWiseCode = KeyCode.LeftArrow;
-    public KeyCode flipCode = KeyCode.UpArrow;
-    public KeyCode flipCode2 = KeyCode.DownArrow;
+    private KeyCode rotationClockWiseCode = KeyCode.RightArrow;
+    private KeyCode rotationCounterClockWiseCode = KeyCode.LeftArrow;
+    private KeyCode flipCode = KeyCode.UpArrow;
+    private KeyCode flipCode2 = KeyCode.DownArrow;
 
     //selected
     public static ShapeMove selectedShapeMove;
