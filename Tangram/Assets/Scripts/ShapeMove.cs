@@ -141,8 +141,8 @@ public class ShapeMove : MonoBehaviour
     private bool canFlip;
 
     //Control Keycode
-    public KeyCode rotationClockWiseCode = KeyCode.LeftArrow;
-    public KeyCode rotationCounterClockWiseCode = KeyCode.RightArrow;
+    public KeyCode rotationClockWiseCode = KeyCode.RightArrow;
+    public KeyCode rotationCounterClockWiseCode = KeyCode.LeftArrow;
     public KeyCode flipCode = KeyCode.UpArrow;
     public KeyCode flipCode2 = KeyCode.DownArrow;
 
@@ -235,6 +235,28 @@ public class ShapeMove : MonoBehaviour
 
     }
 
+    //Double click
+    float clicked = 0;
+    float clicktime = 0;
+    float clickdelay = 0.5f;
+
+    bool DoubleClick()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            clicked++;
+            if (clicked == 1) clicktime = Time.time;
+        }
+        if (clicked > 1 && Time.time - clicktime < clickdelay)
+        {
+            clicked = 0;
+            clicktime = 0;
+            return true;
+        }
+        else if (clicked > 2 || Time.time - clicktime > 1) clicked = 0;
+        return false;
+    }
+
 
     // Update is called once per frame
     void Update()
@@ -248,21 +270,29 @@ public class ShapeMove : MonoBehaviour
         
         if(ReferenceEquals(ShapeMove.selectedShapeMove, this))
         {
-            if (Input.GetKeyUp(rotationClockWiseCode))
-            {
-                RotateShape(false);
-            }
-
-            if (Input.GetKeyUp(rotationCounterClockWiseCode))
+            if (Input.GetKeyUp(rotationClockWiseCode) || Input.GetMouseButtonUp(1))
             {
                 RotateShape(true);
             }
 
+            if (Input.GetKeyUp(rotationCounterClockWiseCode))
+            {
+                RotateShape(false);
+            }
 
-            if (Input.GetKeyUp(flipCode) || Input.GetKeyUp(flipCode2))
+
+            if (Input.GetKeyUp(flipCode) || Input.GetKeyUp(flipCode2) || Input.GetMouseButtonUp(2))
             {
                 FlipShape();
             }
+
+            //if (DoubleClick())
+            //{
+            //    if (Vector3.Distance(currentPosition, this.transform.position) < 1e-2f)
+            //    {
+            //        FlipShape();
+            //    }
+            //}
 
         }
 

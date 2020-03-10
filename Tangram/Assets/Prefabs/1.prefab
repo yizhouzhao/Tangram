@@ -117,10 +117,10 @@ MonoBehaviour:
     shapeRotationId: 0
   overLapList: []
   rotationClockWiseCode: 276
-  rotationCounterClockWiseCode: 275
+  rotationCounterClockWiseCode: 0
   flipCode: 273
   flipCode2: 274
-  hightSphere: {fileID: 0}
+  highlightSphere: {fileID: 0}
 --- !u!64 &64923548199937660
 MeshCollider:
   m_ObjectHideFlags: 0
