@@ -43,6 +43,7 @@ public class GameBoard : MonoBehaviour
 {
     [Header("Images and URLs")]
     public string imageURLTextURL = "https://raw.githubusercontent.com/yizhouzhao/Tangram/master/Tangram/Assets/Resources/ImageURL.txt";
+    public string alreadyLabeledURL = "https://raw.githubusercontent.com/yizhouzhao/Tangram/master/Tangram/Assets/Resources/AlreadyLabeledImageIndex.txt";
     public int imageIndex;
     public List<string> imageURLList;
     public string imageURL;
@@ -56,7 +57,7 @@ public class GameBoard : MonoBehaviour
 
     //public AllInformation allInformation;
 
-    public static CurrentShapeInformation curInfo = new CurrentShapeInformation();
+    public static CurrentShapeInformation curInfo;
 
     //Get images url from text url
     public void GetImageURLs()
@@ -89,12 +90,14 @@ public class GameBoard : MonoBehaviour
 
                 yield return null;
 
+
+
                 if (urlLinks.Length > 0)
                 {
                     while (imagePanelUI.loadImageSuccessful == false)
                     {
-                        int randomImgIndex = UnityEngine.Random.Range(0, urlLinks.Length * urlLinks.Length);
-                        imageIndex = (int)Mathf.Sqrt(randomImgIndex);
+                        int randomImgIndex = UnityEngine.Random.Range(0, urlLinks.Length);
+                        imageIndex = randomImgIndex;
                         Debug.Log("Gameboard image index: " + imageIndex);
 
                         imageURL = urlLinks[imageIndex];
@@ -102,7 +105,7 @@ public class GameBoard : MonoBehaviour
 
                         imagePanelUI.LoadImageFromURL(imageURL);
 
-                        yield return new WaitForSeconds(0.5f);
+                        yield return new WaitForSeconds(1f);
                     }
 
 
@@ -171,6 +174,8 @@ public class GameBoard : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        curInfo = new CurrentShapeInformation();
+
         //allInformation = new AllInformation();
         imageURLList = new List<string>();
 
