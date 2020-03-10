@@ -43,11 +43,13 @@ public class GameBoard : MonoBehaviour
 {
     [Header("Images and URLs")]
     public string imageURLTextURL = "https://raw.githubusercontent.com/yizhouzhao/Tangram/master/Tangram/Assets/Resources/ImageURL.txt";
-    public string alreadyLabeledURL = "https://raw.githubusercontent.com/yizhouzhao/Tangram/master/Tangram/Assets/Resources/AlreadyLabeledImageIndex.txt";
     public int imageIndex;
     public List<string> imageURLList;
     public string imageURL;
     public UIImagePanel imagePanelUI;
+
+    [Header("Labels and URLs")]
+    public string alreadyLabeledURL = "https://raw.githubusercontent.com/yizhouzhao/Tangram/master/Tangram/Assets/Resources/AlreadyLabeledImageIndex.txt";
 
     [Header("Google form sender")]
     public GoogleFormSender formSender;
@@ -79,6 +81,7 @@ public class GameBoard : MonoBehaviour
             }
             else
             {
+
                 string[] urlLinks = webRequest.downloadHandler.text.Split('\n');
                 foreach(string urlLink in urlLinks)
                 {
@@ -90,14 +93,47 @@ public class GameBoard : MonoBehaviour
 
                 yield return null;
 
+                string[] labeledImageIds;
+                using (UnityWebRequest labelRequest = UnityWebRequest.Get(alreadyLabeledURL))
+                {
+                    yield return labelRequest.SendWebRequest();
+                    labeledImageIds = labelRequest.downloadHandler.text.Split('\n');
+                }
 
+                //foreach (string labeledImageId in labeledImageIds)
+                //{
+                //    Debug.Log("labeledImageId " + labeledImageId);
+                //}
+
+                    yield return null;
 
                 if (urlLinks.Length > 0)
                 {
+                    int trials = 0;
                     while (imagePanelUI.loadImageSuccessful == false)
                     {
+                        trials++;
                         int randomImgIndex = UnityEngine.Random.Range(0, urlLinks.Length);
                         imageIndex = randomImgIndex;
+
+                        bool indexIsLabeled = false;
+                        if (labeledImageIds.Length > 0)
+                        {
+                            foreach(string labeledImageId in labeledImageIds)
+                            {
+                                if (imageIndex.ToString() == labeledImageId)
+                                {
+                                    indexIsLabeled = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        //Debug.Log("image index " + imageIndex + " is labeled? " + indexIsLabeled);
+
+                        if (indexIsLabeled && trials < 50)
+                            continue;
+
                         Debug.Log("Gameboard image index: " + imageIndex);
 
                         imageURL = urlLinks[imageIndex];
