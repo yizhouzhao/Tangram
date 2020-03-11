@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+//using UnityEngine.EventSystems;
 
 [System.Serializable]
 public class ShapeInfo
@@ -150,6 +151,7 @@ public class ShapeMove : MonoBehaviour
     public static ShapeMove selectedShapeMove;
     public GameObject highlightSphere;
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -209,7 +211,7 @@ public class ShapeMove : MonoBehaviour
     }
 
     //Rotate shape clockwisely or counterclockwisely
-    void RotateShape(bool isClockWise, int times = 1)
+    public void RotateShape(bool isClockWise, int times = 1)
     {
         float clockWise = isClockWise ? 1.0f : -1.0f;
         this.gameObject.transform.Rotate(Vector3.back, rotAngle * clockWise * times, Space.World);
@@ -225,7 +227,7 @@ public class ShapeMove : MonoBehaviour
     }
 
     //flip the shape up/down
-    void FlipShape()
+    public void FlipShape()
     {
         this.gameObject.transform.Rotate(Vector3.right, 180, Space.World);
 
@@ -235,27 +237,28 @@ public class ShapeMove : MonoBehaviour
 
     }
 
-    //Double click
-    float clicked = 0;
-    float clicktime = 0;
-    float clickdelay = 0.5f;
+    ////Double click
+    //float clicked = 0;
+    //float clicktime = 0;
+    //float clickdelay = 0.5f;
 
-    bool DoubleClick()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            clicked++;
-            if (clicked == 1) clicktime = Time.time;
-        }
-        if (clicked > 1 && Time.time - clicktime < clickdelay)
-        {
-            clicked = 0;
-            clicktime = 0;
-            return true;
-        }
-        else if (clicked > 2 || Time.time - clicktime > 1) clicked = 0;
-        return false;
-    }
+
+    //bool DoubleClick()
+    //{
+    //    if (Input.GetMouseButtonDown(0))
+    //    {
+    //        clicked++;
+    //        if (clicked == 1) clicktime = Time.time;
+    //    }
+    //    if (clicked > 1 && Time.time - clicktime < clickdelay)
+    //    {
+    //        clicked = 0;
+    //        clicktime = 0;
+    //        return true;
+    //    }
+    //    else if (clicked > 2 || Time.time - clicktime > 1) clicked = 0;
+    //    return false;
+    //}
 
 
     // Update is called once per frame
@@ -343,6 +346,10 @@ public class ShapeMove : MonoBehaviour
 
     private void OnMouseDrag()
     {
+        //if (EventSystem.current.IsPointerOverGameObject())
+        //{
+        //    return;
+        //}
         transform.position = GetMouseWorldPos() + mOffset;
 
         //Debug.Log("Shape move: " + transform.position);
@@ -366,8 +373,13 @@ public class ShapeMove : MonoBehaviour
         //Left mouse button
         if (Input.GetMouseButtonDown(0))
         {
+            //if (EventSystem.current.IsPointerOverGameObject())
+            //{
+            //    return;
+            //}
+
             //Record movement sequence
-            if(!ReferenceEquals(ShapeMove.selectedShapeMove, this))
+            if (!ReferenceEquals(ShapeMove.selectedShapeMove, this))
             {
                 GameBoard.curInfo.AddMoveShapeToSequence(this.shapeInfo.shapeId);
                 if (ShapeMove.selectedShapeMove)
