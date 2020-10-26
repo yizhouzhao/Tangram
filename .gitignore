@@ -39,3 +39,8 @@ sysinfo.txt
 #
 Tangram/Assets/Resources/data/
 Tangram/Temp/
+python/data/
+python/.idea/
+python/omniglot/
+python/__pycache__/
+python/.ipynb_checkpoints/
