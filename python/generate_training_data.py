@@ -234,10 +234,18 @@ def ShuffleTangram(shapeInfoList, moveSequence, filePath, scale=1):
 
     # shuffle and save images
     for i, idx in enumerate(placeSequence):
-        RandomShuffleOneShape(idx, shapeInfoList, pointList, boardWidth / gridStep, boardHeight / gridStep, scale)
+        #RandomShuffleOneShape(idx, shapeInfoList, pointList, boardWidth / gridStep, boardHeight / gridStep, scale)
+
+        for j in range(len(shapeInfoList)):
+            if str(shapeInfoList[j]['shapeId']) == str(idx):
+                del shapeInfoList[j]
+                break
+
         img, pointList = DrawImageFromShapeInfo(shapeInfoList, scale)
         cv2.imwrite(os.path.join(filePath, str(i + 1) + '.jpg'), img)
         plt.imshow(img)
         plt.show()
+
+
 
     print("finished!")

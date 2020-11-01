@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
+using System.IO;
 
 [System.Serializable]
 public class CurrentShapeInformation
@@ -43,7 +44,7 @@ public class GameBoard : MonoBehaviour
 {
     [Header("Images and URLs")]
     public string imageURLTextURL = "https://raw.githubusercontent.com/yizhouzhao/Tangram/master/Tangram/Assets/Resources/ImageURL.txt";
-    public int imageIndex;
+    public static int imageIndex;
     public List<string> imageURLList;
     public string imageURL;
     public UIImagePanel imagePanelUI;
@@ -100,12 +101,28 @@ public class GameBoard : MonoBehaviour
                     labeledImageIds = labelRequest.downloadHandler.text.Split('\n');
                 }
 
+                Debug.Log("imageIndex: " + imageIndex.ToString());
+                int currentIndex;
+                if (imageIndex > 0)
+                {
+                    currentIndex = imageIndex;
+                }
+                else
+                {
+                    TextAsset currentIndexText = Resources.Load<TextAsset>("Text/currentIndex");
+                    currentIndex = int.Parse(currentIndexText.text.Trim());
+                    Resources.UnloadAsset(currentIndexText);
+                }
+
+
+                Debug.Log("currentIndex: " + currentIndex.ToString());
+
                 //foreach (string labeledImageId in labeledImageIds)
                 //{
                 //    Debug.Log("labeledImageId " + labeledImageId);
                 //}
 
-                    yield return null;
+                yield return null;
 
                 if (urlLinks.Length > 0)
                 {
@@ -113,7 +130,7 @@ public class GameBoard : MonoBehaviour
                     while (imagePanelUI.loadImageSuccessful == false)
                     {
                         trials++;
-                        int randomImgIndex = UnityEngine.Random.Range(0, urlLinks.Length);
+                        int randomImgIndex = currentIndex + trials; //UnityEngine.Random.Range(0, urlLinks.Length);
                         imageIndex = randomImgIndex;
 
                         bool indexIsLabeled = false;
@@ -171,6 +188,8 @@ public class GameBoard : MonoBehaviour
 
     public void SaveCurrentShapeInfo()
     {
+        WriteCurrentIndex();
+
         foreach (ShapeMove shapeMove in SevenShapeMoveList)
         {
             GameBoard.curInfo.SevenShapeInfo.Add(new ShapeInfo(shapeMove.shapeInfo));
@@ -182,8 +201,17 @@ public class GameBoard : MonoBehaviour
         {
             formSender.SendInfoToGoogleForm(imageURL, imageIndex.ToString(), jsonInfo);
         }
-    //allInformation.AddCurrrentShapeInfo(curInfo);
-}
+        //allInformation.AddCurrrentShapeInfo(curInfo);
+    }
+
+    public void WriteCurrentIndex()
+    {
+        string path = "Assets/Resources/Text/currentIndex.txt";
+
+        StreamWriter writer = new StreamWriter(path);
+        writer.Write(imageIndex.ToString());
+        writer.Close();
+    }
 
     public void ReportWrongImage()
     {
@@ -207,8 +235,7 @@ public class GameBoard : MonoBehaviour
         //formSender.SendInfoToGoogleForm(imageURL, imageIndex.ToString(), jsonInfo);
     }
 
-    // Start is called before the first frame update
-    void Start()
+    void RenewScene()
     {
         curInfo = new CurrentShapeInformation();
 
@@ -221,9 +248,22 @@ public class GameBoard : MonoBehaviour
 
         //Place tangrams
         StartCoroutine(PlaceShapes());
-
     }
+    // Start is called before the first frame update
+    //void Start()
+    //{
+    //    RenewScene();
+    //}
 
+    void OnEnable() => SceneManager.sceneLoaded += OnSceneLoaded;
+
+    void OnDisable() => SceneManager.sceneLoaded -= OnSceneLoaded;
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        RenewScene();
+    }
+    
     IEnumerator PlaceShapes()
     {
         foreach(ShapeMove shape in SevenShapeMoveList)
