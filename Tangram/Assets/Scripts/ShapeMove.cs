@@ -139,7 +139,7 @@ public class ShapeMove : MonoBehaviour
     //Flip by middle click
     //private float lastClickTime = 0f;
     //private float catchTime = 0.2f;
-    private bool canFlip;
+    // private bool canFlip;
 
     //Control Keycode
     private KeyCode rotationClockWiseCode = KeyCode.D;

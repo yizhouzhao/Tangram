@@ -23,14 +23,14 @@ jsoninfo = {"MoveShapeSequence":[4,3,4,2,7,3,4,2,7,6,5,6,5,6,7,2,4,2,3,4,5,6,1],
 moveSequence = jsoninfo["MoveShapeSequence"]
 sevenShapeInfo = jsoninfo["SevenShapeInfo"]
 
-def TriangleVertexPosition(shapePositionIds, shapeRotationId, edgeLength=10, scale=1, degree=np.pi / 12):
+def TriangleVertexPosition(shapePositionIds, shapeRotationId, edgeLength=10, scale=1, degree=np.pi / 12, offset = 0.0):
     '''
     Draw triangle vertex positions
     '''
     center_x = shapePositionIds["x"] + boardWidth / gridStep / 2
     center_y = -shapePositionIds["y"] + boardHeight / gridStep / 2
 
-    rotationAngle = degree * shapeRotationId
+    rotationAngle = degree * shapeRotationId + offset
 
     vertex_0_x = edgeLength * np.cos(rotationAngle)
     vertex_0_y = edgeLength * np.sin(rotationAngle)
@@ -47,14 +47,14 @@ def TriangleVertexPosition(shapePositionIds, shapeRotationId, edgeLength=10, sca
     return np.array([point_0, point_1, point_2]) * scale
 
 
-def SquareVertexPosition(shapePositionIds, shapeRotationId, edgeLength=10, scale=1, degree=np.pi / 12):
+def SquareVertexPosition(shapePositionIds, shapeRotationId, edgeLength=10, scale=1, degree=np.pi / 12, offset = 0.0):
     '''
     Draw triangle vertex positions
     '''
     center_x = shapePositionIds["x"] + boardWidth / gridStep / 2
     center_y = -shapePositionIds["y"] + boardHeight / gridStep / 2
 
-    rotationAngle = degree * shapeRotationId
+    rotationAngle = degree * shapeRotationId + offset
 
     vertex_0_x = edgeLength * np.cos(rotationAngle)
     vertex_0_y = edgeLength * np.sin(rotationAngle)
@@ -117,22 +117,90 @@ def ParallelogramVertexPosition(shapePositionIds, shapeRotationId, edgeLength=5,
 
         return np.array([point_0, point_1, point_2, point_3]) * scale
 
+def CircleVertexPosition(shapePositionIds, edgeLength=5.0, scale=1, degree=np.pi / 12):
+    '''
+        Draw circle vertex positions (twenty quadrilateral)
+    '''
+    center_x = shapePositionIds["x"] + boardWidth / gridStep / 2
+    center_y = -shapePositionIds["y"] + boardHeight / gridStep / 2
+
+    point_list = []
+    for shapeRotationId in range(24):
+        rotationAngle = degree * shapeRotationId
+
+        vertex_i_x = edgeLength * np.cos(rotationAngle)
+        vertex_i_y = edgeLength * np.sin(rotationAngle)
+        point_i = ((int)(center_x + vertex_i_x), (int)(center_y + vertex_i_y))
+
+        point_list.append(point_i)
+
+    return np.asarray(point_list) * scale
+
+def RectangleVertexPosition(shapePositionIds, shapeRotationId, half_width, half_height, scale=1, degree=np.pi / 12):
+    '''
+    Draw rectangle
+    :param shapePositionIds:
+    :param shapeRotationId:
+    :param half_width:
+    :param half_height:
+    :param scale:
+    :param degree:
+    :return:
+    '''
+    center_x = shapePositionIds["x"] + boardWidth / gridStep / 2
+    center_y = -shapePositionIds["y"] + boardHeight / gridStep / 2
+
+    point_list = []
+    rotationAngle = degree * shapeRotationId
+
+    for u, v in [(1, 1), (1, -1), (-1, -1), (-1, 1)]:
+        vertex_i_x = u * half_width
+        vertex_i_y = v * half_height
+
+        vertex_i_x_r = vertex_i_x * np.cos(rotationAngle) - vertex_i_y * np.sin(rotationAngle)
+        vertex_i_y_r = vertex_i_x * np.sin(rotationAngle) + vertex_i_y * np.cos(rotationAngle)
+
+        point_i = ((int)(center_x + vertex_i_x_r), (int)(center_y + vertex_i_y_r))
+        point_list.append(point_i)
+
+    return np.asarray(point_list) * scale
+
 def DrawImageFromShapeInfo(shapeInfoList, scale=1):
     canvas = np.ones((100 * scale, 100 * scale, 3), np.uint8) * 255
     pointDic = {}
 
     for shapeInfo in shapeInfoList:
-        if (shapeInfo["shapeId"] == 1 or shapeInfo["shapeId"] == 2):  # small triangle
-            point_t = TriangleVertexPosition(shapeInfo["shapePositionIds"], shapeInfo["shapeRotationId"], 10, scale)
-        elif (shapeInfo["shapeId"] == 5):  # middle triangle
-            point_t = TriangleVertexPosition(shapeInfo["shapePositionIds"], shapeInfo["shapeRotationId"], 10 * 1.414,
-                                             scale)
-        elif (shapeInfo["shapeId"] == 6 or shapeInfo["shapeId"] == 7):  # large triangle
-            point_t = TriangleVertexPosition(shapeInfo["shapePositionIds"], shapeInfo["shapeRotationId"], 10 * 2, scale)
-        elif (shapeInfo["shapeId"] == 3):  # square
-            point_t = SquareVertexPosition(shapeInfo["shapePositionIds"], shapeInfo["shapeRotationId"], 10, scale)
-        else:  # =4 parallelogram
-            point_t = ParallelogramVertexPosition(shapeInfo["shapePositionIds"], shapeInfo["shapeRotationId"], 5, scale)
+        if "furnitureType" in shapeInfo:
+            if shapeInfo["furnitureType"] == 0: # circle
+                point_t = CircleVertexPosition(shapeInfo["shapePositionIds"], 10.0 * 1.414, scale)
+            elif shapeInfo["furnitureType"] == 1: #square
+                point_t = SquareVertexPosition(shapeInfo["shapePositionIds"], shapeInfo["shapeRotationId"], 10,
+                                               scale, offset= np.pi / 4)
+            elif shapeInfo["furnitureType"] == 2: # table
+                point_t = RectangleVertexPosition(shapeInfo["shapePositionIds"], shapeInfo["shapeRotationId"], 25, 10,
+                                                  scale)
+            elif shapeInfo["furnitureType"] == 3: # bed
+                point_t = RectangleVertexPosition(shapeInfo["shapePositionIds"], shapeInfo["shapeRotationId"], 30, 25,
+                                                  scale)
+            elif shapeInfo["furnitureType"] == 4: # shelf
+                point_t = RectangleVertexPosition(shapeInfo["shapePositionIds"], shapeInfo["shapeRotationId"], 20, 5,
+                                                  scale)
+            else: # shapeInfo["furnitureType"] == 4: # cabinet
+                point_t = TriangleVertexPosition(shapeInfo["shapePositionIds"], shapeInfo["shapeRotationId"], 10,
+                                                 scale)
+
+        else:
+            if (shapeInfo["shapeId"] == 1 or shapeInfo["shapeId"] == 2):  # small triangle
+                point_t = TriangleVertexPosition(shapeInfo["shapePositionIds"], shapeInfo["shapeRotationId"], 10, scale)
+            elif (shapeInfo["shapeId"] == 5):  # middle triangle
+                point_t = TriangleVertexPosition(shapeInfo["shapePositionIds"], shapeInfo["shapeRotationId"], 10 * 1.414,
+                                                 scale)
+            elif (shapeInfo["shapeId"] == 6 or shapeInfo["shapeId"] == 7):  # large triangle
+                point_t = TriangleVertexPosition(shapeInfo["shapePositionIds"], shapeInfo["shapeRotationId"], 10 * 2, scale)
+            elif (shapeInfo["shapeId"] == 3):  # square
+                point_t = SquareVertexPosition(shapeInfo["shapePositionIds"], shapeInfo["shapeRotationId"], 10, scale)
+            else:  # =4 parallelogram
+                point_t = ParallelogramVertexPosition(shapeInfo["shapePositionIds"], shapeInfo["shapeRotationId"], 5, scale)
 
         cv2.drawContours(canvas, [point_t], 0, (0, 0, 0), -1)
         pointDic[shapeInfo["shapeId"]] = point_t
@@ -246,6 +314,19 @@ def ShuffleTangram(shapeInfoList, moveSequence, filePath, scale=1):
         plt.imshow(img)
         plt.show()
 
-
-
     print("finished!")
+
+
+def jitterOneShape(shapeIdx, shapeInfoList, max_translate = 5.0):
+    translate_x = np.random.randint(-max_translate, max_translate + 1)
+    translate_y = np.random.randint(-max_translate, max_translate + 1)
+
+    shapeInfoList[shapeIdx]["shapePosition"]["x"] += translate_x
+    shapeInfoList[shapeIdx]["shapePosition"]["y"] += translate_y
+
+    shapeInfoList[shapeIdx]["shapeRotationId"] += np.random.randint(24)
+
+    shapeInfoList[shapeIdx]["shapeRotationId"] %= 24
+
+
+

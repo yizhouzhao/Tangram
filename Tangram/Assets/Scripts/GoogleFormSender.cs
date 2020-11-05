@@ -6,9 +6,6 @@ using UnityEngine.Networking;
 
 public class GoogleFormSender : MonoBehaviour
 {
-    public GameBoard gameBoard;
-
-
     [Header("Google form")]
     public string formURL = "https://docs.google.com/forms/d/e/1FAIpQLSccYxUJBq2FM6O4oHGhf_qf9Ugu2LaFizgwoJF6PoWf-UlV5A/formResponse";
 

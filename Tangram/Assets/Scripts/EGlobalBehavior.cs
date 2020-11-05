@@ -23,12 +23,17 @@ public class GTangram
 
 public enum EShapeType
 {
-    Triangle_Small, Triangle_Middle, Triangle_Large, Square, Parallelogram
+    Triangle_Small, Triangle_Middle, Triangle_Large, Square, Parallelogram, Circle, Rectangle
+}
+
+public enum EFurnitureType
+{
+    Round_Table, Chair, Rectangle_Table, Bed, Shelf, Canbinet
 }
 
 public enum ERotationType
 {
-    Triangle, Square, Parallelogram
+    Triangle, Square, Parallelogram, Circle, Rectangle
 }
 
 public class EGlobalBehavior : MonoBehaviour
