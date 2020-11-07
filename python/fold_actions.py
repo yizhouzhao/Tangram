@@ -139,3 +139,43 @@ def calculate_image_score(cloth_img: np.array, transform_img, model_img, use_cud
     img_t_score = model_img(img_t.unsqueeze(0))
 
     return img_t_score
+
+
+
+def fold_action_max_beam_search(cloth, value_model, transforms_after, steps = 2, use_cuda = False):
+    folded_cloth_save_image = []
+    max_score = -1
+    max_index = -1
+
+    #init
+    future_cloth_list = []
+    future_cloth_list.append([cloth])
+
+    for step in range(steps):
+        next_cloth_list = []
+        for temp_cloth in future_cloth_list[-1]:
+            for i in range(1, 11):
+                c = - i * 7
+                for a, b in [(1, 0), (0, 1)]:
+                    cloth_folded = matrix_line_symmetry(temp_cloth, a, b, c)
+                    next_cloth_list.append(cloth_folded)
+
+        future_cloth_list.append(next_cloth_list)
+
+    for i, temp_cloth in enumerate(future_cloth_list[-1]):
+        img_folded = Image.fromarray(np.uint8(temp_cloth * 255), 'L')
+        img_folded_t = transforms_after(img_folded)
+        if use_cuda:
+            img_folded_t = img_folded_t.to("cuda")
+        img_folded_t_score = value_model(img_folded_t.unsqueeze(0)).item()
+
+        if max_score < img_folded_t_score:
+            # print(action, max_score)
+            max_score = img_folded_t_score
+            max_index = i
+
+    for i in range(len(future_cloth_list)-1, 0, -1):
+        folded_cloth_save_image.append(future_cloth_list[i][max_index])
+        max_index = max_index // 20
+
+    return max_score, folded_cloth_save_image
